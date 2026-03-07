@@ -1,14 +1,14 @@
-import React from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export function Button({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
@@ -17,24 +17,25 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   className = '',
   ...props
-}) => {
-  const baseStyles = 'font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2';
-  
+}: ButtonProps) {
+  const baseStyles =
+    'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg font-medium transition disabled:cursor-not-allowed disabled:opacity-60';
+
   const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-primary-dark',
-    secondary: 'bg-secondary text-white hover:bg-green-600',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-    danger: 'bg-error text-white hover:bg-red-600',
+    primary: 'bg-[#FF9933] text-white hover:bg-[#e68a2e]',
+    secondary: 'bg-[#1B3A5F] text-white hover:bg-[#2a4a70]',
+    outline: 'border-2 border-[#1B3A5F] text-[#1B3A5F] hover:bg-[#1B3A5F] hover:text-white',
+    danger: 'bg-red-600 text-white hover:bg-red-700',
   };
-  
+
   const sizeStyles = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    sm: 'px-4 py-2 text-sm min-h-10',
+    md: 'px-6 py-3 text-base min-h-11',
+    lg: 'px-8 py-4 text-lg min-h-12',
   };
-  
+
   const widthStyle = fullWidth ? 'w-full' : '';
-  
+
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className}`}
@@ -50,4 +51,4 @@ export const Button: React.FC<ButtonProps> = ({
       {children}
     </button>
   );
-};
+}
