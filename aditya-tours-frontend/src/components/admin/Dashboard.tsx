@@ -20,6 +20,8 @@ function Dashboard() {
     monthlyRevenue: 450000,
   };
 
+  const monthlyRevenue = 'monthlyRevenue' in stats ? stats.monthlyRevenue : stats.revenue;
+
   const recentBookings = [
     { id: 'BK12345', customer: 'Rajesh Kumar', route: 'Thane → Mumbai Airport', status: 'Confirmed', amount: 2500 },
     { id: 'BK12346', customer: 'Priya Sharma', route: 'Powai → Pune', status: 'Pending', amount: 4500 },
@@ -83,7 +85,7 @@ function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-slate-600">Monthly Revenue</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{formatCurrency(stats.monthlyRevenue)}</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900">{formatCurrency(monthlyRevenue)}</p>
               <p className="mt-1 text-xs text-green-600 flex items-center gap-1">
                 <TrendingUp className="h-3 w-3" />
                 +18% from last month

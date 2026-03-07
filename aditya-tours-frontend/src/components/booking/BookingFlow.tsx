@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 import { bookingSchema } from '../../utils/validation';
 import { Button } from '../common/Button';
@@ -8,9 +7,6 @@ import Step1Location from './Step1Location';
 import Step2DateTime from './Step2DateTime';
 import Step3CustomerInfo from './Step3CustomerInfo';
 import Step4Summary from './Step4Summary';
-import { useAvailability } from '../../hooks/useAvailability';
-import { useBooking } from '../../hooks/useBooking';
-import { toIsoDateTime } from '../../utils/dateTime';
 import { useToast } from '../../hooks/useToast';
 import { trackBookingStep } from '../../services/analyticsService';
 
@@ -54,9 +50,6 @@ function BookingFlow() {
     reValidateMode: 'onChange',
   });
 
-  const availability = useAvailability();
-  const booking = useBooking();
-
   const isFinalStep = step === 4;
 
   const values = form.watch();
@@ -66,7 +59,6 @@ function BookingFlow() {
     formValues: values,
     formErrors: form.formState.errors,
     isDirty: form.formState.isDirty,
-    touchedFields: form.formState.touched,
   });
 
   const canShowStep = useMemo(

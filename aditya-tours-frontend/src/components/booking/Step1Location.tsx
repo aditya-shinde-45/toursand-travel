@@ -5,14 +5,13 @@ import type { BookingFlowInput } from './BookingFlow.tsx';
 import LocationPicker from './LocationPicker';
 import RouteMap from './RouteMap';
 import PriceDisplay from './PriceDisplay';
-import { Button } from '../common/Button';
 
 interface Step1LocationProps {
   form: UseFormReturn<BookingFlowInput>;
 }
 
 function Step1Location({ form }: Step1LocationProps) {
-  const { estimateRoute, mapsEnabled } = useGoogleMaps();
+  useGoogleMaps();
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropAddress, setDropAddress] = useState('');
   const [pickupCoords, setPickupCoords] = useState({ lat: 19.2183, lng: 72.9781 });

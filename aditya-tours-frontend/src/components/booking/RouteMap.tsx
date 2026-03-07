@@ -5,7 +5,7 @@ interface RouteMapProps {
   travelTimeMinutes: number;
 }
 
-function RouteMap({ pickupAddress, dropAddress, distanceKm, travelTimeMinutes }: RouteMapProps) {
+function RouteMap({ pickupAddress, dropAddress, distanceKm }: RouteMapProps) {
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <h4 className="text-sm font-semibold text-slate-800">Route Preview</h4>
