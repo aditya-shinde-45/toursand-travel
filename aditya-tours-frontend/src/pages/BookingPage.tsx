@@ -13,7 +13,7 @@ function BookingPage() {
       <div className="grid gap-4">
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <h1 className="text-3xl font-bold">Book Your Ride</h1>
-          <p className="mt-2 text-sm text-slate-600">Complete the 4-step booking flow. No account required.</p>
+          <p className="mt-2 text-sm text-slate-600">Complete your booking in one page. No account required.</p>
         </section>
         <BookingFlow />
       </div>

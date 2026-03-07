@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 import { bookingSchema } from '../../utils/validation';
@@ -8,22 +8,11 @@ import Step2DateTime from './Step2DateTime';
 import Step3CustomerInfo from './Step3CustomerInfo';
 import Step4Summary from './Step4Summary';
 import { useToast } from '../../hooks/useToast';
-import { trackBookingStep } from '../../services/analyticsService';
 
 export type BookingFlowInput = z.input<typeof bookingSchema>;
 export type BookingFlowValues = z.output<typeof bookingSchema>;
 
-const stepTitles = ['Location', 'Date & Time', 'Customer Details', 'Summary'];
-
-const stepFields: Array<(keyof BookingFlowInput)[]> = [
-  ['pickupLocation', 'dropLocation', 'tripType', 'distanceKm', 'travelTimeMinutes'],
-  ['departureDate', 'departureTime', 'returnDate', 'returnTime'],
-  ['customerName', 'customerPhone', 'customerEmail', 'passengerCount'],
-  ['agreeTerms'],
-];
-
 function BookingFlow() {
-  const [step, setStep] = useState(1);
   const [referenceNumber, setReferenceNumber] = useState('');
   const { showToast } = useToast();
 
@@ -50,53 +39,7 @@ function BookingFlow() {
     reValidateMode: 'onChange',
   });
 
-  const isFinalStep = step === 4;
-
   const values = form.watch();
-
-  console.log('🔄 BookingFlow state:', {
-    currentStep: step,
-    formValues: values,
-    formErrors: form.formState.errors,
-    isDirty: form.formState.isDirty,
-  });
-
-  const canShowStep = useMemo(
-    () => ({
-      one: step === 1,
-      two: step === 2,
-      three: step === 3,
-      four: step === 4,
-    }),
-    [step],
-  );
-
-  const onNext = async () => {
-    console.log('▶️ Continue clicked - validating step', step, 'fields:', stepFields[step - 1]);
-    const valid = await form.trigger(stepFields[step - 1]);
-    console.log('✅ Validation result:', valid, 'Form errors:', form.formState.errors);
-    if (!valid) return;
-
-    // Skip availability check until backend is ready
-    // if (step === 2) {
-    //   const data = form.getValues();
-    //   const result = await availability.mutateAsync({
-    //     departureDatetime: toIsoDateTime(data.departureDate, data.departureTime),
-    //     returnDatetime: data.tripType === 'ROUND_TRIP' ? toIsoDateTime(data.returnDate ?? '', data.returnTime ?? '') : undefined,
-    //     travelTimeMinutes: Number(data.travelTimeMinutes),
-    //   });
-
-    //   if (!result.available) {
-    //     showToast('error', result.reason || 'Vehicle is unavailable for selected slot.');
-    //     return;
-    //   }
-    // }
-
-    setStep((current) => Math.min(4, current + 1));
-    trackBookingStep(Math.min(4, step + 1));
-  };
-
-  const onBack = () => setStep((current) => Math.max(1, current - 1));
 
   const onConfirmBooking = form.handleSubmit(async (data) => {
     // Mock booking submission until backend is ready
@@ -140,44 +83,35 @@ function BookingFlow() {
 
   return (
     <form onSubmit={onConfirmBooking} className="grid gap-5">
-      <div className="grid gap-2 sm:grid-cols-4">
-        {stepTitles.map((title, index) => {
-          const item = index + 1;
-          const active = item === step;
-          const done = item < step;
-          return (
-            <div
-              key={title}
-              className={`rounded-lg border p-3 text-sm ${
-                active
-                  ? 'border-blue-300 bg-blue-50 text-blue-800'
-                  : done
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                    : 'border-slate-200 bg-white text-slate-600'
-              }`}
-            >
-              Step {item}: {title}
-            </div>
-          );
-        })}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="text-lg font-semibold text-slate-900">1) Trip Location</h3>
+        <div className="mt-4">
+          <Step1Location form={form} />
+        </div>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        {canShowStep.one ? (
-          <Step1Location form={form} />
-        ) : null}
-        {canShowStep.two ? (
+        <h3 className="text-lg font-semibold text-slate-900">2) Date & Time</h3>
+        <div className="mt-4">
           <Step2DateTime form={form} />
-        ) : null}
-        {canShowStep.three ? (
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="text-lg font-semibold text-slate-900">3) Customer Details</h3>
+        <div className="mt-4">
           <Step3CustomerInfo register={form.register} errors={form.formState.errors} />
-        ) : null}
-        {canShowStep.four ? (
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="text-lg font-semibold text-slate-900">4) Booking Summary</h3>
+        <div className="mt-4">
           <Step4Summary
             values={values}
             onAgreeChange={(value: boolean) => form.setValue('agreeTerms', value, { shouldDirty: true, shouldTouch: true })}
           />
-        ) : null}
+        </div>
       </div>
 
       {form.formState.errors.agreeTerms ? (
@@ -185,21 +119,7 @@ function BookingFlow() {
       ) : null}
 
       <div className="flex flex-wrap gap-3">
-        {step > 1 ? (
-          <Button type="button" variant="outline" onClick={onBack}>
-            Back
-          </Button>
-        ) : null}
-
-        {!isFinalStep ? (
-          <Button type="button" onClick={onNext}>
-            Continue
-          </Button>
-        ) : (
-          <Button type="submit">
-            Confirm Booking
-          </Button>
-        )}
+        <Button type="submit">Confirm Booking</Button>
       </div>
     </form>
   );
