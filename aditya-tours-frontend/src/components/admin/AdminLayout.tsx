@@ -1,16 +1,23 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const items = [
   { to: '/admin/dashboard', label: 'Dashboard' },
   { to: '/admin/bookings', label: 'Bookings' },
   { to: '/admin/calendar', label: 'Calendar' },
-  { to: '/admin/settings', label: 'Settings' },
   { to: '/admin/content', label: 'Content' },
+  { to: '/admin/price-ranges', label: 'Price Ranges' },
+  { to: '/admin/settings', label: 'Settings' },
 ];
 
 function AdminLayout() {
   const { auth, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login', { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -19,7 +26,7 @@ function AdminLayout() {
           <h1 className="text-lg font-bold">Aditya Tours Admin</h1>
           <div className="flex items-center gap-3 text-sm">
             <span>{auth?.name}</span>
-            <button type="button" className="rounded-md bg-slate-900 px-3 py-2 text-white" onClick={logout}>
+            <button type="button" className="rounded-md bg-slate-900 px-3 py-2 text-white" onClick={handleLogout}>
               Logout
             </button>
           </div>

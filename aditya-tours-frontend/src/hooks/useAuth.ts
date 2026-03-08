@@ -19,10 +19,41 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const STORAGE_KEY = 'aditya_admin_auth';
 const TOKEN_KEY = 'aditya_admin_token';
 
+function isJwtTokenValid(token: string): boolean {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+
+    const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payloadJson = atob(payloadBase64);
+    const payload = JSON.parse(payloadJson) as { exp?: number };
+
+    if (!payload.exp) return true;
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    return payload.exp > nowInSeconds;
+  } catch {
+    return false;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState | null>(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as AuthState) : null;
+    if (!raw) return null;
+
+    try {
+      const parsed = JSON.parse(raw) as AuthState;
+      if (!parsed?.token || !isJwtTokenValid(parsed.token)) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(TOKEN_KEY);
+        return null;
+      }
+      return parsed;
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(TOKEN_KEY);
+      return null;
+    }
   });
 
   const value = useMemo<AuthContextValue>(

@@ -22,6 +22,7 @@ export interface BookingFormData {
   specialInstructions: string;
   distanceKm: number;
   travelTimeMinutes: number;
+  prefillEstimatedFare?: number;
   agreeTerms?: boolean;
   honeypot?: string;
 }

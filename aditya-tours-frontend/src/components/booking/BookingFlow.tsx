@@ -8,18 +8,27 @@ import Step2DateTime from './Step2DateTime';
 import Step3CustomerInfo from './Step3CustomerInfo';
 import Step4Summary from './Step4Summary';
 import { useToast } from '../../hooks/useToast';
+import { useBooking } from '../../hooks/useBooking';
+import type { PopularRoute } from '../../types/content';
 
 export type BookingFlowInput = z.input<typeof bookingSchema>;
 export type BookingFlowValues = z.output<typeof bookingSchema>;
 
-function BookingFlow() {
+interface BookingFlowProps {
+  prefillRoute?: PopularRoute;
+}
+
+function BookingFlow({ prefillRoute }: BookingFlowProps) {
   const [referenceNumber, setReferenceNumber] = useState('');
   const { showToast } = useToast();
+  const booking = useBooking();
+
+  const normalizeAddress = (value?: string) => (value ?? '').trim().toLowerCase();
 
   const form = useForm<BookingFlowInput>({
     defaultValues: {
-      pickupLocation: { address: '', lat: 19.2183, lng: 72.9781 },
-      dropLocation: { address: '', lat: 19.076, lng: 72.8777 },
+      pickupLocation: { address: prefillRoute?.pickupAddress ?? '', lat: 19.2183, lng: 72.9781 },
+      dropLocation: { address: prefillRoute?.destinationAddress ?? '', lat: 19.076, lng: 72.8777 },
       tripType: 'ONE_WAY',
       departureDate: '',
       departureTime: '',
@@ -30,8 +39,8 @@ function BookingFlow() {
       customerEmail: '',
       passengerCount: 1,
       specialInstructions: '',
-      distanceKm: 0,
-      travelTimeMinutes: 0,
+      distanceKm: prefillRoute?.distanceKm ?? 0,
+      travelTimeMinutes: prefillRoute?.travelTimeMinutes ?? 0,
       agreeTerms: false,
       honeypot: '',
     },
@@ -40,35 +49,39 @@ function BookingFlow() {
   });
 
   const values = form.watch();
+  const isUsingPopularRouteFare = Boolean(
+    prefillRoute
+      && normalizeAddress(values.pickupLocation?.address) === normalizeAddress(prefillRoute.pickupAddress)
+      && normalizeAddress(values.dropLocation?.address) === normalizeAddress(prefillRoute.destinationAddress),
+  );
 
   const onConfirmBooking = form.handleSubmit(async (data) => {
-    // Mock booking submission until backend is ready
-    const mockRef = 'BK' + Date.now().toString().slice(-8);
-    setReferenceNumber(mockRef);
-    showToast('success', `Booking submitted. Reference: ${mockRef}`);
-    console.log('Booking data:', data);
-    
-    // Uncomment when backend is ready:
-    // const result = await booking.mutateAsync({
-    //   pickupLocation: data.pickupLocation,
-    //   dropLocation: data.dropLocation,
-    //   tripType: data.tripType,
-    //   departureDate: data.departureDate,
-    //   departureTime: data.departureTime,
-    //   returnDate: data.returnDate ?? '',
-    //   returnTime: data.returnTime ?? '',
-    //   customerName: data.customerName,
-    //   customerPhone: data.customerPhone,
-    //   customerEmail: data.customerEmail,
-    //   passengerCount: Number(data.passengerCount),
-    //   specialInstructions: data.specialInstructions ?? '',
-    //   distanceKm: Number(data.distanceKm),
-    //   travelTimeMinutes: Number(data.travelTimeMinutes),
-    //   agreeTerms: data.agreeTerms,
-    //   honeypot: data.honeypot ?? '',
-    // });
-    // setReferenceNumber(result.referenceNumber);
-    // showToast('success', `Booking submitted. Reference: ${result.referenceNumber}`);
+    try {
+      const result = await booking.mutateAsync({
+        pickupLocation: data.pickupLocation,
+        dropLocation: data.dropLocation,
+        tripType: data.tripType,
+        departureDate: data.departureDate,
+        departureTime: data.departureTime,
+        returnDate: data.returnDate ?? '',
+        returnTime: data.returnTime ?? '',
+        customerName: data.customerName,
+        customerPhone: data.customerPhone,
+        customerEmail: data.customerEmail,
+        passengerCount: Number(data.passengerCount),
+        specialInstructions: data.specialInstructions ?? '',
+        distanceKm: Number(data.distanceKm),
+        travelTimeMinutes: Number(data.travelTimeMinutes),
+        prefillEstimatedFare: isUsingPopularRouteFare ? prefillRoute?.estimatedFare : undefined,
+        agreeTerms: data.agreeTerms,
+        honeypot: data.honeypot ?? '',
+      });
+      setReferenceNumber(result.referenceNumber);
+      showToast('success', `Booking submitted successfully. Reference: ${result.referenceNumber}`);
+    } catch (error) {
+      showToast('error', 'Failed to submit booking. Please try again.');
+      console.error('Booking error:', error);
+    }
   });
 
   if (referenceNumber) {
@@ -86,7 +99,7 @@ function BookingFlow() {
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h3 className="text-lg font-semibold text-slate-900">1) Trip Location</h3>
         <div className="mt-4">
-          <Step1Location form={form} />
+          <Step1Location form={form} prefillRoute={prefillRoute} />
         </div>
       </div>
 
@@ -109,6 +122,7 @@ function BookingFlow() {
         <div className="mt-4">
           <Step4Summary
             values={values}
+            prefillEstimatedFare={isUsingPopularRouteFare ? prefillRoute?.estimatedFare : undefined}
             onAgreeChange={(value: boolean) => form.setValue('agreeTerms', value, { shouldDirty: true, shouldTouch: true })}
           />
         </div>

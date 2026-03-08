@@ -3,7 +3,13 @@
 @import 'tailwindcss';
 
 :root {
-  color-scheme: light;
+  color-scheme: only light;
+}
+
+html,
+body {
+  color-scheme: only light;
+  forced-color-adjust: none;
 }
 
 * {

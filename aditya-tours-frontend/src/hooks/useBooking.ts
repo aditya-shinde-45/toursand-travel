@@ -1,11 +1,38 @@
 import { useMutation } from '@tanstack/react-query';
 import type { BookingFormData } from '../types/booking';
 import { createBooking } from '../services/bookingService';
+import { calculateFare } from '../services/fareService';
 import { toIsoDateTime } from '../utils/dateTime';
 
 export function useBooking() {
   return useMutation({
     mutationFn: async (data: BookingFormData) => {
+      let totalFare = 0;
+
+      if (typeof data.prefillEstimatedFare === 'number' && data.prefillEstimatedFare > 0) {
+        totalFare = data.tripType === 'ROUND_TRIP'
+          ? data.prefillEstimatedFare * 2
+          : data.prefillEstimatedFare;
+      } else {
+        try {
+          const fareResult = await calculateFare({
+            distanceKm: data.distanceKm,
+            pickupLat: data.pickupLocation?.lat,
+            pickupLng: data.pickupLocation?.lng,
+            dropLat: data.dropLocation?.lat,
+            dropLng: data.dropLocation?.lng,
+            isRoundTrip: data.tripType === 'ROUND_TRIP',
+          });
+          totalFare = fareResult.totalFare;
+        } catch (error) {
+          console.error('Failed to calculate fare, using fallback:', error);
+          const baseRate = 100;
+          const perKmRate = 15;
+          const effectiveDistance = data.tripType === 'ROUND_TRIP' ? data.distanceKm * 2 : data.distanceKm;
+          totalFare = Math.round((baseRate + effectiveDistance * perKmRate) * data.passengerCount);
+        }
+      }
+
       return createBooking({
         tripType: data.tripType,
         pickupAddress: data.pickupLocation?.address || '',
@@ -24,6 +51,7 @@ export function useBooking() {
         customerEmail: data.customerEmail,
         passengerCount: data.passengerCount,
         specialInstructions: data.specialInstructions || undefined,
+        totalFare,
       });
     },
   });

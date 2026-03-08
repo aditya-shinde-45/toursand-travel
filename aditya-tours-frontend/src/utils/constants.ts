@@ -19,12 +19,12 @@ export const EXTRA_KM_RATE = 15;
 export const EXTRA_HOUR_RATE = 150;
 
 export const POPULAR_ROUTES: PopularRoute[] = [
-  { id: '1', destinationName: 'Mumbai Airport T2', destinationAddress: 'Chhatrapati Shivaji Maharaj International Airport, Mumbai', distanceKm: 35, travelTimeMinutes: 75, estimatedFare: 1400, displayOrder: 1 },
-  { id: '2', destinationName: 'Pune', destinationAddress: 'Pune, Maharashtra', distanceKm: 151, travelTimeMinutes: 220, estimatedFare: 2500, displayOrder: 2 },
-  { id: '3', destinationName: 'Nashik', destinationAddress: 'Nashik, Maharashtra', distanceKm: 165, travelTimeMinutes: 240, estimatedFare: 3500, displayOrder: 3 },
-  { id: '4', destinationName: 'Lonavala', destinationAddress: 'Lonavala, Maharashtra', distanceKm: 96, travelTimeMinutes: 160, estimatedFare: 2500, displayOrder: 4 },
-  { id: '5', destinationName: 'Igatpuri', destinationAddress: 'Igatpuri, Maharashtra', distanceKm: 95, travelTimeMinutes: 145, estimatedFare: 1800, displayOrder: 5 },
-  { id: '6', destinationName: 'Navi Mumbai', destinationAddress: 'Navi Mumbai, Maharashtra', distanceKm: 24, travelTimeMinutes: 55, estimatedFare: 1200, displayOrder: 6 },
+  { id: '1', pickupLocation: 'Thane West', pickupAddress: 'Thane West, Thane, Maharashtra', destinationName: 'Mumbai Airport T2', destinationAddress: 'Chhatrapati Shivaji Maharaj International Airport, Mumbai', distanceKm: 35, travelTimeMinutes: 75, estimatedFare: 1400, displayOrder: 1 },
+  { id: '2', pickupLocation: 'Thane West', pickupAddress: 'Thane West, Thane, Maharashtra', destinationName: 'Pune', destinationAddress: 'Pune, Maharashtra', distanceKm: 151, travelTimeMinutes: 220, estimatedFare: 2500, displayOrder: 2 },
+  { id: '3', pickupLocation: 'Thane East', pickupAddress: 'Thane East, Thane, Maharashtra', destinationName: 'Nashik', destinationAddress: 'Nashik, Maharashtra', distanceKm: 165, travelTimeMinutes: 240, estimatedFare: 3500, displayOrder: 3 },
+  { id: '4', pickupLocation: 'Thane Central', pickupAddress: 'Thane Central, Thane, Maharashtra', destinationName: 'Lonavala', destinationAddress: 'Lonavala, Maharashtra', distanceKm: 96, travelTimeMinutes: 160, estimatedFare: 2500, displayOrder: 4 },
+  { id: '5', pickupLocation: 'Thane West', pickupAddress: 'Thane West, Thane, Maharashtra', destinationName: 'Igatpuri', destinationAddress: 'Igatpuri, Maharashtra', distanceKm: 95, travelTimeMinutes: 145, estimatedFare: 1800, displayOrder: 5 },
+  { id: '6', pickupLocation: 'Thane East', pickupAddress: 'Thane East, Thane, Maharashtra', destinationName: 'Navi Mumbai', destinationAddress: 'Navi Mumbai, Maharashtra', distanceKm: 24, travelTimeMinutes: 55, estimatedFare: 1200, displayOrder: 6 },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [

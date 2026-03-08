@@ -43,10 +43,10 @@ function Testimonials({ testimonials }: TestimonialsProps) {
               
               <div className="flex items-center gap-3 border-t border-slate-100 pt-4">
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1B3A5F] text-sm font-bold text-white">
-                  {item.customerName.charAt(0).toUpperCase()}
+                  {item.customerName?.charAt(0).toUpperCase() || 'A'}
                 </div>
                 <div>
-                  <p className="font-semibold text-[#1B3A5F]">{item.customerName}</p>
+                  <p className="font-semibold text-[#1B3A5F]">{item.customerName || 'Anonymous'}</p>
                   <p className="text-xs text-slate-500">Verified Customer</p>
                 </div>
               </div>

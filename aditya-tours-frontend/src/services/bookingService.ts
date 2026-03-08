@@ -25,33 +25,33 @@ interface BookingPayload {
   customerEmail: string;
   passengerCount: number;
   specialInstructions?: string;
+  totalFare: number;
 }
 
 export async function checkAvailability(input: AvailabilityInput) {
-  const query = new URLSearchParams({
-    departureDatetime: input.departureDatetime,
-    travelTimeMinutes: String(input.travelTimeMinutes),
+  const endDateTime = input.returnDatetime || 
+    new Date(new Date(input.departureDatetime).getTime() + (input.travelTimeMinutes * 60000)).toISOString();
+
+  return apiRequest<{ available: boolean }>('/bookings/check-availability', {
+    method: 'POST',
+    body: JSON.stringify({
+      startDateTime: input.departureDatetime,
+      endDateTime
+    }),
   });
-
-  if (input.returnDatetime) {
-    query.set('returnDatetime', input.returnDatetime);
-  }
-
-  return apiRequest<{ available: boolean; reason?: string; suggestedDates?: string[] }>(
-    `/bookings/check-availability?${query.toString()}`,
-  );
 }
 
 export async function createBooking(payload: BookingPayload) {
-  return apiRequest<{ referenceNumber: string }>('/bookings', {
+  const response = await apiRequest<any>('/bookings', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
+  return { referenceNumber: response.reference_number };
 }
 
-export async function trackBooking(referenceNumber: string, email: string) {
+export async function trackBooking(referenceNumber: string, _email: string) {
   return apiRequest<BookingTrackResult>(
-    `/bookings/track/${encodeURIComponent(referenceNumber)}?email=${encodeURIComponent(email)}`,
+    `/bookings/track/${encodeURIComponent(referenceNumber)}`,
   );
 }
 

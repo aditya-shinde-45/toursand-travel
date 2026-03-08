@@ -4,21 +4,48 @@ import { useGoogleMaps } from '../../hooks/useGoogleMaps';
 import type { BookingFlowInput } from './BookingFlow.tsx';
 import LocationPicker from './LocationPicker';
 import RouteMap from './RouteMap';
-import PriceDisplay from './PriceDisplay';
+import type { PopularRoute } from '../../types/content';
 
 interface Step1LocationProps {
   form: UseFormReturn<BookingFlowInput>;
+  prefillRoute?: PopularRoute;
 }
 
-function Step1Location({ form }: Step1LocationProps) {
+function Step1Location({ form, prefillRoute }: Step1LocationProps) {
   useGoogleMaps();
-  const [pickupAddress, setPickupAddress] = useState('');
-  const [dropAddress, setDropAddress] = useState('');
+  const [pickupAddress, setPickupAddress] = useState(prefillRoute?.pickupAddress ?? '');
+  const [dropAddress, setDropAddress] = useState(prefillRoute?.destinationAddress ?? '');
   const [pickupCoords, setPickupCoords] = useState({ lat: 19.2183, lng: 72.9781 });
   const [dropCoords, setDropCoords] = useState({ lat: 19.076, lng: 72.8777 });
   const [tripType, setTripType] = useState<'ONE_WAY' | 'ROUND_TRIP'>('ONE_WAY');
-  const [distanceKm, setDistanceKm] = useState(0);
-  const [travelTimeMinutes, setTravelTimeMinutes] = useState(0);
+  const [distanceKm, setDistanceKm] = useState(prefillRoute?.distanceKm ?? 0);
+  const [travelTimeMinutes, setTravelTimeMinutes] = useState(prefillRoute?.travelTimeMinutes ?? 0);
+  const normalizeAddress = (value?: string) => (value ?? '').trim().toLowerCase();
+  const isPopularRouteLocationChanged = Boolean(
+    prefillRoute
+      && (
+        normalizeAddress(pickupAddress) !== normalizeAddress(prefillRoute.pickupAddress)
+        || normalizeAddress(dropAddress) !== normalizeAddress(prefillRoute.destinationAddress)
+      ),
+  );
+
+  useEffect(() => {
+    if (!prefillRoute) return;
+
+    form.setValue('pickupLocation', {
+      address: prefillRoute.pickupAddress,
+      lat: pickupCoords.lat,
+      lng: pickupCoords.lng,
+    });
+    form.setValue('dropLocation', {
+      address: prefillRoute.destinationAddress,
+      lat: dropCoords.lat,
+      lng: dropCoords.lng,
+    });
+    form.setValue('distanceKm', prefillRoute.distanceKm);
+    form.setValue('travelTimeMinutes', prefillRoute.travelTimeMinutes);
+    form.setValue('tripType', 'ONE_WAY');
+  }, [prefillRoute, form, pickupCoords.lat, pickupCoords.lng, dropCoords.lat, dropCoords.lng]);
 
   useEffect(() => {
     if (pickupAddress && dropAddress && pickupCoords && dropCoords) {
@@ -38,10 +65,10 @@ function Step1Location({ form }: Step1LocationProps) {
         const straightDistance = R * c;
         
         // Better road factor based on distance
-        let roadFactor = 1.2;
-        if (straightDistance > 80) roadFactor = 1.25; // Highway routes
-        else if (straightDistance > 30) roadFactor = 1.3; // Inter-city
-        else roadFactor = 1.4; // City routes
+        let roadFactor = 1.15;
+        if (straightDistance > 80) roadFactor = 1.2; // Highway routes
+        else if (straightDistance > 30) roadFactor = 1.25; // Inter-city
+        else roadFactor = 1.3; // City routes
         
         const distance = straightDistance * roadFactor;
         
@@ -85,6 +112,12 @@ function Step1Location({ form }: Step1LocationProps) {
         error={form.formState.errors.dropLocation?.address?.message}
       />
 
+      {isPopularRouteLocationChanged && (
+        <p className="-mt-2 text-xs text-blue-700">
+          Location changed. Fare will now be calculated as per KM-based price range.
+        </p>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="rounded-lg border border-slate-300 p-3 text-sm font-medium">
           <input
@@ -112,8 +145,6 @@ function Step1Location({ form }: Step1LocationProps) {
         distanceKm={distanceKm}
         travelTimeMinutes={travelTimeMinutes}
       />
-
-      <PriceDisplay distanceKm={distanceKm} travelTimeMinutes={travelTimeMinutes} />
     </div>
   );
 }

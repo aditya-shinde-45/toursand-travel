@@ -45,11 +45,11 @@ function HomePage() {
         <section id="about">
           <VehicleDetails />
         </section>
+        <PopularRoutes routes={routesQuery.data || POPULAR_ROUTES} />
         <section id="services">
           <PricingSection />
         </section>
-        <PopularRoutes routes={routesQuery.data || POPULAR_ROUTES} />
-          <HowItWorks />
+        <HowItWorks />
         <WhyChooseUs />
         <Testimonials testimonials={testimonialsQuery.data || TESTIMONIALS} />
         <FAQ faqs={faqsQuery.data || FAQS} />
