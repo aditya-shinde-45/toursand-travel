@@ -545,9 +545,139 @@ function generateAdminStatusUpdateHTML(booking, oldStatus, newStatus, adminName)
   `;
 }
 
+/**
+ * Send contact form notification to admin
+ */
+async function sendAdminContactNotification(contactData) {
+  try {
+    const { name, email, phone, subject, message, created_at } = contactData;
+    
+    const mailOptions = {
+      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      to: SMTP_USER, // Send to admin email
+      subject: `New Contact Form Submission: ${subject || 'General Inquiry'}`,
+      html: generateContactNotificationHTML(contactData),
+      replyTo: email // Allow admin to reply directly to customer
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Contact notification email sent to admin:', info.messageId);
+    return info;
+
+  } catch (error) {
+    console.error('Error sending contact notification email:', error);
+    // Don't throw - we don't want contact form submission to fail if email fails
+    return null;
+  }
+}
+
+/**
+ * Generate contact notification HTML for admin
+ */
+function generateContactNotificationHTML(contactData) {
+  const { name, email, phone, subject, message, created_at } = contactData;
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 650px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #1B3A5F 0%, #2D5A8E 100%); color: white; padding: 25px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header p { margin: 5px 0 0 0; opacity: 0.9; font-size: 14px; }
+        .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .info-card { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #FF9933; border-radius: 4px; }
+        .info-row { padding: 10px 0; border-bottom: 1px solid #e9ecef; display: flex; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: 600; color: #1B3A5F; min-width: 120px; }
+        .info-value { color: #495057; flex: 1; }
+        .message-box { background: #fff8e1; border: 1px solid #ffd54f; padding: 20px; margin: 20px 0; border-radius: 6px; }
+        .message-box h3 { margin-top: 0; color: #f57c00; }
+        .message-text { color: #333; white-space: pre-wrap; word-wrap: break-word; line-height: 1.8; }
+        .action-buttons { text-align: center; margin: 25px 0; }
+        .button { background: #FF9933; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 5px; font-weight: 600; }
+        .button:hover { background: #e68a2e; }
+        .footer { text-align: center; padding: 20px; color: #6c757d; font-size: 12px; }
+        .timestamp { background: #e7f3ff; color: #0066cc; padding: 8px 15px; border-radius: 4px; font-size: 13px; text-align: center; margin: 15px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>📧 New Contact Form Submission</h1>
+          <p>Someone has reached out through your website</p>
+        </div>
+        
+        <div class="content">
+          <div class="timestamp">
+            <strong>Received:</strong> ${new Date(created_at).toLocaleString('en-IN', { 
+              dateStyle: 'full', 
+              timeStyle: 'medium',
+              timeZone: 'Asia/Kolkata'
+            })}
+          </div>
+
+          <div class="info-card">
+            <h3 style="margin-top: 0; color: #1B3A5F;">Contact Information</h3>
+            
+            <div class="info-row">
+              <span class="info-label">Name:</span>
+              <span class="info-value"><strong>${name}</strong></span>
+            </div>
+            
+            <div class="info-row">
+              <span class="info-label">Email:</span>
+              <span class="info-value"><a href="mailto:${email}" style="color: #FF9933;">${email}</a></span>
+            </div>
+            
+            ${phone ? `
+            <div class="info-row">
+              <span class="info-label">Phone:</span>
+              <span class="info-value"><a href="tel:${phone}" style="color: #FF9933;">${phone}</a></span>
+            </div>
+            ` : ''}
+            
+            ${subject ? `
+            <div class="info-row">
+              <span class="info-label">Subject:</span>
+              <span class="info-value"><strong>${subject}</strong></span>
+            </div>
+            ` : ''}
+          </div>
+
+          <div class="message-box">
+            <h3>📝 Message</h3>
+            <div class="message-text">${message}</div>
+          </div>
+
+          <div class="action-buttons">
+            <a href="mailto:${email}?subject=Re: ${encodeURIComponent(subject || 'Your Inquiry')}" class="button">Reply to ${name}</a>
+          </div>
+
+          <div style="background: #e7f3ff; padding: 15px; border-radius: 6px; margin-top: 20px;">
+            <p style="margin: 0; font-size: 14px; color: #0066cc;">
+              <strong>💡 Quick Tip:</strong> Respond to inquiries within 24 hours to maintain excellent customer service.
+            </p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p><strong>Aditya Tours & Travels - Admin Notification</strong></p>
+          <p>This is an automated notification from your contact form.</p>
+          <p style="margin-top: 10px;">© ${new Date().getFullYear()} Aditya Tours & Travels. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 module.exports = {
   sendBookingConfirmationEmail,
   sendBookingStatusUpdateEmail,
   sendAdminNewBookingNotification,
-  sendAdminStatusUpdateNotification
+  sendAdminStatusUpdateNotification,
+  sendAdminContactNotification
 };

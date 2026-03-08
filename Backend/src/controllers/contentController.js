@@ -1,4 +1,5 @@
 const contentRepository = require('../repositories/contentRepository');
+const { sendAdminContactNotification } = require('../services/emailService');
 
 /**
  * Get all popular routes
@@ -258,6 +259,11 @@ async function submitContact(req, res) {
       subject,
       message
     });
+
+    // Send email notification to admin (non-blocking)
+    sendAdminContactNotification(submission)
+      .then(() => console.log('Contact notification email sent to admin'))
+      .catch(err => console.error('Failed to send contact notification email:', err));
 
     res.status(201).json({
       success: true,

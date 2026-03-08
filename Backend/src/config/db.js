@@ -6,6 +6,7 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
+  connectionTimeoutMillis: 10000,
 });
 
 async function checkDatabaseConnection() {
