@@ -2,9 +2,9 @@ import type { FAQ, PopularRoute, Testimonial } from '../types/content';
 import type { PricingPackage } from '../types/pricing';
 
 export const APP_NAME = 'Aditya Tours & Travels';
-export const SUPPORT_PHONE = '+919876543210';
-export const SUPPORT_EMAIL = 'support@adityatours.com';
-export const WHATSAPP_NUMBER = '919876543210';
+export const SUPPORT_PHONE = '+919969984328';
+export const SUPPORT_EMAIL = 'support@adityatourstravel.com';
+export const WHATSAPP_NUMBER = '919969984328';
 
 export const PRICING_PACKAGES: PricingPackage[] = [
   { id: '2h', packageName: '2 Hours', durationHours: 2, includedKm: 20, packagePrice: 1200, displayOrder: 1 },

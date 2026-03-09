@@ -12,6 +12,12 @@ import ThaneTaxiServicePage from './pages/seo/ThaneTaxiServicePage.tsx';
 import ThaneAirportTaxiPage from './pages/seo/ThaneAirportTaxiPage.tsx';
 import ThaneOutstationCabPage from './pages/seo/ThaneOutstationCabPage.tsx';
 import ThaneErtigaCabPage from './pages/seo/ThaneErtigaCabPage.tsx';
+import CarRentalThanePage from './pages/seo/CarRentalThanePage.tsx';
+import NaviMumbaiTaxiServicePage from './pages/seo/NaviMumbaiTaxiServicePage.tsx';
+import NaviMumbaiAirportCabPage from './pages/seo/NaviMumbaiAirportCabPage.tsx';
+import CarRentalNaviMumbaiPage from './pages/seo/CarRentalNaviMumbaiPage.tsx';
+import MumbaiTaxiServicePage from './pages/seo/MumbaiTaxiServicePage.tsx';
+import MumbaiAirportCabPage from './pages/seo/MumbaiAirportCabPage.tsx';
 
 // Admin Pages
 import LoginPage from './pages/admin/LoginPage.tsx';
@@ -58,11 +64,21 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
 
-              {/* SEO Landing Pages */}
+              {/* SEO Landing Pages - Thane */}
               <Route path="/thane-taxi-service" element={<ThaneTaxiServicePage />} />
               <Route path="/thane-airport-taxi" element={<ThaneAirportTaxiPage />} />
               <Route path="/thane-outstation-cab" element={<ThaneOutstationCabPage />} />
               <Route path="/thane-ertiga-cab" element={<ThaneErtigaCabPage />} />
+              <Route path="/car-rental-thane" element={<CarRentalThanePage />} />
+
+              {/* SEO Landing Pages - Navi Mumbai */}
+              <Route path="/navi-mumbai-taxi-service" element={<NaviMumbaiTaxiServicePage />} />
+              <Route path="/navi-mumbai-airport-cab" element={<NaviMumbaiAirportCabPage />} />
+              <Route path="/car-rental-navi-mumbai" element={<CarRentalNaviMumbaiPage />} />
+
+              {/* SEO Landing Pages - Mumbai */}
+              <Route path="/mumbai-taxi-service" element={<MumbaiTaxiServicePage />} />
+              <Route path="/mumbai-airport-cab" element={<MumbaiAirportCabPage />} />
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<LoginPage />} />

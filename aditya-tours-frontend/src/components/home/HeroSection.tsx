@@ -110,7 +110,7 @@ function HeroSection() {
             </div>
 
             <div className="absolute -bottom-8 right-3 z-20 rounded-2xl border border-[#FF9933]/20 bg-white px-4 py-3 shadow-xl">
-              <p className="text-xs font-semibold text-[#1B3A5F]">{content.floatingTag}</p>
+              <img src="/logo.png" alt="Aditya Tours & Travels" className="h-10 w-auto object-contain" />
             </div>
           </div>
         </div>

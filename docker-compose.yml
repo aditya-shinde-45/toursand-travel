@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: ./Backend
+    container_name: tours-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres.avgqdrhgvszaezrclupz:qefLzdEndyJrBEYj@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres
+      - PORT=5000
+      - NODE_ENV=production
+      - CORS_ORIGIN=*
+      - JWT_SECRET=your-secret-key-change-in-production
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin123
+      - SMTP_USER=info.adityatourstravels@gmail.com
+      - SMTP_PASS=ayqttdhcgseldpxa
+      - NODE_TLS_REJECT_UNAUTHORIZED=0dbb13b71598c 
+    restart: unless-stopped

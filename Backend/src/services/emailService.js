@@ -129,7 +129,7 @@ function generateBookingConfirmationHTML(booking) {
             <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/track?ref=${booking.reference_number}" class="button">Track Your Booking</a>
           </center>
 
-          <p>If you have any questions, feel free to contact us at ${SMTP_USER} or call us at +91-9876543210.</p>
+          <p>If you have any questions, feel free to contact us at ${SMTP_USER} or call us at +91-9969984328.</p>
         </div>
 
         <div class="footer">
@@ -199,7 +199,7 @@ function generateStatusUpdateHTML(booking, oldStatus, newStatus) {
             <p>We'd love to hear your feedback. Please rate your experience.</p>
           ` : ''}
 
-          <p>For any queries, contact us at ${SMTP_USER} or call +91-9876543210.</p>
+          <p>For any queries, contact us at ${SMTP_USER} or call +91-9969984328.</p>
         </div>
 
         <div class="footer">

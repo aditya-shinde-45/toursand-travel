@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://adityatours.com/sitemap.xml
+Sitemap: https://adityatourstravel.com/sitemap.xml

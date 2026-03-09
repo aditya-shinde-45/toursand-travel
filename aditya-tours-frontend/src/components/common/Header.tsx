@@ -36,8 +36,8 @@ function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link to="/" className="text-base font-bold text-[#1B3A5F] sm:text-lg">
-          {APP_NAME}
+        <Link to="/" className="flex items-center">
+          <img src="/logo.png" alt={APP_NAME} className="h-12 w-auto object-contain" />
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">

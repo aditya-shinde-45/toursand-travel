@@ -10,22 +10,48 @@ interface SeoLandingTemplateProps {
   path: string;
   subtitle: string;
   serviceAreas: string[];
+  serviceAreasTitle?: string;
   faqs: Array<{ question: string; answer: string }>;
   points: string[];
+  keywords?: string;
 }
 
-function SeoLandingTemplate({ title, seoTitle, seoDescription, path, subtitle, serviceAreas, faqs, points }: SeoLandingTemplateProps) {
+function SeoLandingTemplate({ title, seoTitle, seoDescription, path, subtitle, serviceAreas, serviceAreasTitle, faqs, points, keywords }: SeoLandingTemplateProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Service',
     serviceType: title,
     provider: {
       '@type': 'LocalBusiness',
+      '@id': 'https://adityatourstravel.com/#business',
       name: 'Aditya Tours & Travels',
-      areaServed: 'Thane, Maharashtra',
-      telephone: '+91-9876543210',
+      url: 'https://adityatourstravel.com',
+      logo: 'https://adityatourstravel.com/logo.png',
+      telephone: '+919969984328',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Thane',
+        addressRegion: 'Maharashtra',
+        postalCode: '400601',
+        addressCountry: 'IN',
+      },
+      areaServed: [
+        { '@type': 'City', name: 'Thane' },
+        { '@type': 'City', name: 'Mumbai' },
+        { '@type': 'City', name: 'Navi Mumbai' },
+      ],
     },
     areaServed: serviceAreas,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
   };
 
   return (
@@ -34,9 +60,10 @@ function SeoLandingTemplate({ title, seoTitle, seoDescription, path, subtitle, s
         title={seoTitle}
         description={seoDescription}
         canonicalPath={path}
-        keywords="thane taxi service, airport taxi thane, outstation cab thane, ertiga cab thane"
+        keywords={keywords ?? 'taxi service Mumbai Thane Navi Mumbai, cab booking, airport taxi, outstation cab, car rental, tours and travel'}
       />
-      <StructuredData id={`seo-${path}`} data={structuredData} />
+      <StructuredData id={`seo-service-${path}`} data={structuredData} />
+      <StructuredData id={`seo-faq-${path}`} data={faqSchema} />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <h1 className="text-3xl font-bold">{title}</h1>
@@ -52,7 +79,7 @@ function SeoLandingTemplate({ title, seoTitle, seoDescription, path, subtitle, s
             ))}
           </ul>
 
-          <h3 className="mt-6 text-lg font-semibold">Service Areas in Thane</h3>
+          <h3 className="mt-6 text-lg font-semibold">{serviceAreasTitle ?? 'Service Areas'}</h3>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
             {serviceAreas.map((area) => (
               <span key={area} className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
@@ -72,16 +99,22 @@ function SeoLandingTemplate({ title, seoTitle, seoDescription, path, subtitle, s
           </div>
         </article>
 
-        <aside className="rounded-xl border border-blue-200 bg-blue-50 p-6 shadow-sm">
-          <h3 className="text-lg font-semibold">Need a quick booking?</h3>
-          <p className="mt-2 text-sm text-slate-700">Get fast confirmation for local, airport, and outstation rides.</p>
-          <div className="mt-4">
+        <aside className="rounded-xl border border-[#FF9933]/30 bg-[#FF9933]/5 p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-[#1B3A5F]">Need a quick booking?</h3>
+          <p className="mt-2 text-sm text-slate-700">Get fast confirmation for local, airport, and outstation rides across Mumbai, Thane &amp; Navi Mumbai.</p>
+          <div className="mt-4 grid gap-2">
             <Link
               to="/book"
-              className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              className="inline-flex justify-center rounded-lg bg-[#FF9933] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#e68a2e]"
             >
               Book Now
             </Link>
+            <a
+              href="tel:+919969984328"
+              className="inline-flex justify-center rounded-lg border border-[#1B3A5F] px-4 py-2.5 text-sm font-semibold text-[#1B3A5F] transition hover:bg-[#1B3A5F]/5"
+            >
+              Call Now
+            </a>
           </div>
         </aside>
       </div>
