@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
-const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = require('../config/env');
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = require('../config/env');
+
+const senderAddress = SMTP_FROM || `Aditya Tours & Travels <${SMTP_USER}>`;
 
 // Create transporter
 const transporter = nodemailer.createTransport({
@@ -18,7 +20,7 @@ const transporter = nodemailer.createTransport({
 async function sendBookingConfirmationEmail(booking) {
   try {
     const mailOptions = {
-      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      from: senderAddress,
       to: booking.customer_email,
       subject: `Booking Confirmation - ${booking.reference_number}`,
       html: generateBookingConfirmationHTML(booking)
@@ -40,7 +42,7 @@ async function sendBookingConfirmationEmail(booking) {
 async function sendBookingStatusUpdateEmail(booking, oldStatus, newStatus) {
   try {
     const mailOptions = {
-      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      from: senderAddress,
       to: booking.customer_email,
       subject: `Booking ${newStatus} - ${booking.reference_number}`,
       html: generateStatusUpdateHTML(booking, oldStatus, newStatus)
@@ -217,7 +219,7 @@ function generateStatusUpdateHTML(booking, oldStatus, newStatus) {
 async function sendAdminNewBookingNotification(booking) {
   try {
     const mailOptions = {
-      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      from: senderAddress,
       to: [SMTP_USER, 'adityashinde8073@gmail.com'], // Send to both business and personal email
       subject: `New Booking Alert - ${booking.reference_number}`,
       html: generateAdminNewBookingHTML(booking)
@@ -239,7 +241,7 @@ async function sendAdminNewBookingNotification(booking) {
 async function sendAdminStatusUpdateNotification(booking, oldStatus, newStatus, adminName) {
   try {
     const mailOptions = {
-      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      from: senderAddress,
       to: [SMTP_USER, 'adityashinde8073@gmail.com'], // Send to both business and personal email
       subject: `Booking Status Updated - ${booking.reference_number}`,
       html: generateAdminStatusUpdateHTML(booking, oldStatus, newStatus, adminName)
@@ -553,7 +555,7 @@ async function sendAdminContactNotification(contactData) {
     const { name, email, phone, subject, message, created_at } = contactData;
     
     const mailOptions = {
-      from: `"Aditya Tours & Travels" <${SMTP_USER}>`,
+      from: senderAddress,
       to: SMTP_USER, // Send to admin email
       subject: `New Contact Form Submission: ${subject || 'General Inquiry'}`,
       html: generateContactNotificationHTML(contactData),

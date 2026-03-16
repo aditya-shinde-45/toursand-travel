@@ -114,20 +114,42 @@ jobs:
 
       - name: Update Lambda configuration
         working-directory: ./Backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "Missing GitHub secret: DATABASE_URL" >&2
+            exit 1
+          fi
+
+          if [ -z "$JWT_SECRET" ]; then
+            echo "Missing GitHub secret: JWT_SECRET" >&2
+            exit 1
+          fi
+
           jq -n \
             --arg nodeEnv production \
-            --arg databaseUrl "${{ secrets.DATABASE_URL }}" \
-            --arg jwtSecret "${{ secrets.JWT_SECRET }}" \
-            --arg corsOrigin "${{ secrets.CORS_ORIGIN }}" \
-            --arg frontendUrl "${{ secrets.FRONTEND_URL }}" \
-            --arg smtpHost "${{ secrets.SMTP_HOST }}" \
-            --arg smtpPort "${{ secrets.SMTP_PORT }}" \
-            --arg smtpUser "${{ secrets.SMTP_USER }}" \
-            --arg smtpPass "${{ secrets.SMTP_PASS }}" \
-            --arg smtpFrom "${{ secrets.SMTP_FROM }}" \
-            --arg adminUsername "${{ secrets.ADMIN_USERNAME }}" \
-            --arg adminPassword "${{ secrets.ADMIN_PASSWORD }}" \
+            --arg databaseUrl "$DATABASE_URL" \
+            --arg jwtSecret "$JWT_SECRET" \
+            --arg corsOrigin "$CORS_ORIGIN" \
+            --arg frontendUrl "$FRONTEND_URL" \
+            --arg smtpHost "$SMTP_HOST" \
+            --arg smtpPort "$SMTP_PORT" \
+            --arg smtpUser "$SMTP_USER" \
+            --arg smtpPass "$SMTP_PASS" \
+            --arg smtpFrom "$SMTP_FROM" \
+            --arg adminUsername "$ADMIN_USERNAME" \
+            --arg adminPassword "$ADMIN_PASSWORD" \
             '{
               Variables: {
                 NODE_ENV: $nodeEnv,

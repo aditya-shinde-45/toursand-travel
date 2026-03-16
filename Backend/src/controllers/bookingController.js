@@ -44,15 +44,18 @@ async function createBooking(req, res) {
     // Create booking
     const booking = await bookingRepository.createBooking(bookingData);
 
-    // Send confirmation email to customer (async, don't wait)
-    sendBookingConfirmationEmail(booking).catch(err => {
-      console.error('Failed to send confirmation email:', err);
-    });
+    const emailResults = await Promise.allSettled([
+      sendBookingConfirmationEmail(booking),
+      sendAdminNewBookingNotification(booking),
+    ]);
 
-    // Send notification email to admin (async, don't wait)
-    sendAdminNewBookingNotification(booking).catch(err => {
-      console.error('Failed to send admin notification:', err);
-    });
+    if (emailResults[0].status === 'rejected') {
+      console.error('Failed to send confirmation email:', emailResults[0].reason);
+    }
+
+    if (emailResults[1].status === 'rejected') {
+      console.error('Failed to send admin notification:', emailResults[1].reason);
+    }
 
     res.status(201).json({
       success: true,

@@ -188,27 +188,25 @@ async function updateBookingStatus(req, res) {
       reason
     );
 
-    // Send email notification to customer (async, don't wait)
+    // Wait for email attempts so Lambda does not finish before SMTP sends complete.
     if (oldStatus !== status) {
-      sendBookingStatusUpdateEmail(booking, oldStatus, status)
-        .then(() => {
-          console.log(`Status update email sent to ${booking.customer_email}`);
-        })
-        .catch(err => {
-          console.error('Failed to send status update email:', err);
-          // Don't fail the request if email fails
-        });
-
-      // Send notification to admin (async, don't wait)
       const adminName = req.admin.name || req.admin.username || 'Admin';
-      sendAdminStatusUpdateNotification(booking, oldStatus, status, adminName)
-        .then(() => {
-          console.log('Admin status update notification sent');
-        })
-        .catch(err => {
-          console.error('Failed to send admin notification:', err);
-          // Don't fail the request if email fails
-        });
+      const emailResults = await Promise.allSettled([
+        sendBookingStatusUpdateEmail(booking, oldStatus, status),
+        sendAdminStatusUpdateNotification(booking, oldStatus, status, adminName),
+      ]);
+
+      if (emailResults[0].status === 'fulfilled') {
+        console.log(`Status update email sent to ${booking.customer_email}`);
+      } else {
+        console.error('Failed to send status update email:', emailResults[0].reason);
+      }
+
+      if (emailResults[1].status === 'fulfilled') {
+        console.log('Admin status update notification sent');
+      } else {
+        console.error('Failed to send admin notification:', emailResults[1].reason);
+      }
     }
 
     res.json({

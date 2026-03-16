@@ -260,10 +260,10 @@ async function submitContact(req, res) {
       message
     });
 
-    // Send email notification to admin (non-blocking)
-    sendAdminContactNotification(submission)
-      .then(() => console.log('Contact notification email sent to admin'))
-      .catch(err => console.error('Failed to send contact notification email:', err));
+    const emailResult = await sendAdminContactNotification(submission);
+    if (emailResult) {
+      console.log('Contact notification email sent to admin');
+    }
 
     res.status(201).json({
       success: true,
