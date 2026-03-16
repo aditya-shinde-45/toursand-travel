@@ -3,6 +3,8 @@ node_modules/
 .env.*
 !.env.example
 .serverless/
+.artifacts/
+.build/
 coverage/
 logs/
 *.log

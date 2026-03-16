@@ -9,6 +9,9 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "offline": "serverless offline",
+    "smoke": "node scripts/smoke-test.js",
+    "smoke:remote": "node scripts/smoke-test.js --base-url",
+    "build:lambda": "bash scripts/build-lambda-zip.sh",
     "deploy": "serverless deploy",
     "remove": "serverless remove"
   },
