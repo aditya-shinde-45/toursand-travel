@@ -22,6 +22,7 @@ concurrency:
 env:
   AWS_REGION: ap-south-1
   LAMBDA_FUNCTION_NAME: adityatoursandtravels
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   package-backend:
@@ -73,6 +74,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Validate AWS identity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Validate target Lambda exists
+        run: |
+          aws lambda get-function --function-name "$LAMBDA_FUNCTION_NAME" >/dev/null
 
       - name: Update Lambda configuration
         working-directory: ./Backend
