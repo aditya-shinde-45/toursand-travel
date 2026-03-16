@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { Shield, Star, Clock, MapPin, ArrowRight, Phone, Calendar } from 'lucide-react';
 import { Button } from '../common/Button';
 import type { HeroSectionContent } from '../../types/content';
-import { DEFAULT_HERO_SECTION_CONTENT } from '../../services/contentSettingsService';
 import { getContentSection } from '../../services/contentService';
 
 function HeroSection() {
-  const [content, setContent] = useState<HeroSectionContent>(DEFAULT_HERO_SECTION_CONTENT);
+  const [content, setContent] = useState<HeroSectionContent | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -25,6 +24,26 @@ function HeroSection() {
       mounted = false;
     };
   }, []);
+
+  if (!content) {
+    return (
+      <section className="relative flex min-h-[calc(100svh-5.5rem)] items-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white p-4 sm:min-h-[calc(100svh-6rem)] sm:p-8 lg:p-10">
+        <div className="relative grid w-full max-w-full items-center gap-8 lg:grid-cols-2">
+          <div className="space-y-4">
+            <div className="h-9 w-44 animate-pulse rounded-full bg-slate-200" />
+            <div className="space-y-3">
+              <div className="h-12 w-3/4 animate-pulse rounded bg-slate-200" />
+              <div className="h-12 w-2/3 animate-pulse rounded bg-slate-200" />
+            </div>
+            <div className="h-20 w-full animate-pulse rounded bg-slate-100" />
+          </div>
+          <div className="hidden md:block">
+            <div className="h-[300px] w-full animate-pulse rounded-3xl bg-slate-200 lg:h-[360px]" />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative flex min-h-[calc(100svh-5.5rem)] items-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-gray-50 to-white p-4 sm:min-h-[calc(100svh-6rem)] sm:p-8 lg:p-10">

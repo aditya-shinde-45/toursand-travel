@@ -501,7 +501,6 @@ function ContentManager() {
           <Input label="Contact Title" value={footerContent.contactTitle} onChange={(event) => updateFooterField('contactTitle', event.target.value)} />
           <Input label="Home Link Label" value={footerContent.linkHomeLabel} onChange={(event) => updateFooterField('linkHomeLabel', event.target.value)} />
           <Input label="Book Link Label" value={footerContent.linkBookLabel} onChange={(event) => updateFooterField('linkBookLabel', event.target.value)} />
-          <Input label="Track Link Label" value={footerContent.linkTrackLabel} onChange={(event) => updateFooterField('linkTrackLabel', event.target.value)} />
           <Input label="Privacy Link Label" value={footerContent.linkPrivacyLabel} onChange={(event) => updateFooterField('linkPrivacyLabel', event.target.value)} />
           <Input label="Terms Link Label" value={footerContent.linkTermsLabel} onChange={(event) => updateFooterField('linkTermsLabel', event.target.value)} />
           <Input label="Contact Phone" value={footerContent.contactPhone} onChange={(event) => updateFooterField('contactPhone', event.target.value)} />

@@ -64,11 +64,6 @@ export const bookingSchema = z
     }
   });
 
-export const trackSchema = z.object({
-  referenceNumber: z.string().min(6, 'Booking reference is required'),
-  email: z.string().email('Enter valid email'),
-});
-
 export const contactSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),

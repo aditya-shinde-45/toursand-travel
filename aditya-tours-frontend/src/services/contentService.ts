@@ -1,6 +1,4 @@
 import type { FAQ, PopularRoute, Testimonial } from '../types/content';
-import { FAQS, POPULAR_ROUTES, TESTIMONIALS } from '../utils/constants';
-import { getPopularRoutesData } from './contentSettingsService';
 import { apiRequest } from './api';
 
 function normalizePopularRoute(raw: Record<string, unknown>, index: number): PopularRoute {
@@ -29,18 +27,12 @@ export async function getPopularRoutes() {
   try {
     const routes = await apiRequest<Record<string, unknown>[]>('/content/popular-routes');
     if (!Array.isArray(routes)) {
-      return POPULAR_ROUTES;
+      return [];
     }
 
     return routes.map((route, index) => normalizePopularRoute(route, index));
   } catch {
-    // Try to get from localStorage first (admin-saved routes)
-    const savedRoutes = getPopularRoutesData();
-    if (savedRoutes && savedRoutes.length > 0) {
-      return savedRoutes;
-    }
-    // Fallback to constants
-    return POPULAR_ROUTES;
+    return [];
   }
 }
 
@@ -48,7 +40,7 @@ export async function getTestimonials() {
   try {
     return await apiRequest<Testimonial[]>('/content/testimonials');
   } catch {
-    return TESTIMONIALS;
+    return [];
   }
 }
 
@@ -56,7 +48,7 @@ export async function getFaqs() {
   try {
     return await apiRequest<FAQ[]>('/content/faqs');
   } catch {
-    return FAQS;
+    return [];
   }
 }
 

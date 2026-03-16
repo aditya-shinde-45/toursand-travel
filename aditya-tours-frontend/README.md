@@ -10,7 +10,6 @@ Production-ready frontend for Aditya Tours and Travels booking platform.
   2. Date & time
   3. Customer details
   4. Summary + confirmation
-- Booking tracking page (reference + email)
 - Home page sections:
   - Hero
   - Vehicle details

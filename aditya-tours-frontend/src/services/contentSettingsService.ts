@@ -71,7 +71,6 @@ const DEFAULT_FOOTER_SECTION_CONTENT: FooterSectionContent = {
   quickLinksTitle: 'Quick Links',
   linkHomeLabel: 'Home',
   linkBookLabel: 'Book Taxi',
-  linkTrackLabel: 'Track Booking',
   linkPrivacyLabel: 'Privacy Policy',
   linkTermsLabel: 'Terms of Service',
   contactTitle: 'Contact',

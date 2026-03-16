@@ -48,32 +48,7 @@ Create a new booking.
 
 ---
 
-### 2. Track Booking
-**GET** `/bookings/track/:reference`
-
-Track booking by reference number.
-
-**Example:** `/bookings/track/ATT-A7K9M2`
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "uuid",
-    "reference_number": "ATT-A7K9M2",
-    "status": "CONFIRMED",
-    "trip_type": "ONE_WAY",
-    "pickup_address": "...",
-    "customer_name": "Rajesh Kumar",
-    ...
-  }
-}
-```
-
----
-
-### 3. Check Availability
+### 2. Check Availability
 **POST** `/bookings/check-availability`
 
 Check if vehicles are available for a time slot.
@@ -98,7 +73,7 @@ Check if vehicles are available for a time slot.
 
 ---
 
-### 4. Get Popular Routes
+### 3. Get Popular Routes
 **GET** `/content/popular-routes`
 
 Get all active popular routes.

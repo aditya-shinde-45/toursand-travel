@@ -26,17 +26,6 @@ const authRateLimit = rateLimit({
   },
 });
 
-const bookingTrackRateLimit = rateLimit({
-  windowMs: env.RATE_LIMIT_WINDOW_MS,
-  max: env.TRACK_RATE_LIMIT_MAX,
-  standardHeaders,
-  legacyHeaders,
-  message: {
-    success: false,
-    error: 'Too many tracking attempts. Please try again later.',
-  },
-});
-
 const contactRateLimit = rateLimit({
   windowMs: env.RATE_LIMIT_WINDOW_MS,
   max: env.CONTACT_RATE_LIMIT_MAX,
@@ -51,6 +40,5 @@ const contactRateLimit = rateLimit({
 module.exports = {
   apiRateLimit,
   authRateLimit,
-  bookingTrackRateLimit,
   contactRateLimit,
 };

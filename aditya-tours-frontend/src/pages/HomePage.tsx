@@ -12,7 +12,6 @@ import ContactSection from '../components/home/ContactSection';
 import SEOHead from '../components/seo/SEOHead';
 import StructuredData from '../components/seo/StructuredData';
 import { getFaqs, getPopularRoutes, getTestimonials } from '../services/contentService';
-import { FAQS, POPULAR_ROUTES, TESTIMONIALS } from '../utils/constants';
 
 const LOCAL_BUSINESS_SCHEMA = {
   '@context': 'https://schema.org',
@@ -69,23 +68,25 @@ const LOCAL_BUSINESS_SCHEMA = {
   sameAs: ['https://adityatourstravel.com'],
 };
 
-const FAQ_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-};
-
 function HomePage() {
   const routesQuery = useQuery({ queryKey: ['popular-routes'], queryFn: getPopularRoutes });
   const testimonialsQuery = useQuery({ queryKey: ['testimonials'], queryFn: getTestimonials });
   const faqsQuery = useQuery({ queryKey: ['faqs'], queryFn: getFaqs });
+  const routes = routesQuery.data ?? [];
+  const testimonials = testimonialsQuery.data ?? [];
+  const faqs = faqsQuery.data ?? [];
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
 
   return (
     <SiteLayout>
@@ -96,7 +97,7 @@ function HomePage() {
         canonicalPath="/"
       />
       <StructuredData id="home-localbusiness" data={LOCAL_BUSINESS_SCHEMA} />
-      <StructuredData id="home-faq" data={FAQ_SCHEMA} />
+      {faqs.length > 0 ? <StructuredData id="home-faq" data={faqSchema} /> : null}
 
       <div className="grid gap-6">
         <section id="home">
@@ -105,14 +106,14 @@ function HomePage() {
         <section id="about">
           <VehicleDetails />
         </section>
-        <PopularRoutes routes={routesQuery.data || POPULAR_ROUTES} />
+        <PopularRoutes routes={routes} />
         <section id="services">
           <PricingSection />
         </section>
         <HowItWorks />
         <WhyChooseUs />
-        <Testimonials testimonials={testimonialsQuery.data || TESTIMONIALS} />
-        <FAQ faqs={faqsQuery.data || FAQS} />
+        <Testimonials testimonials={testimonials} />
+        <FAQ faqs={faqs} />
         <section id="contact">
           <ContactSection />
         </section>

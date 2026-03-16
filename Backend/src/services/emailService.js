@@ -123,13 +123,8 @@ function generateBookingConfirmationHTML(booking) {
           <p><strong>What's Next?</strong></p>
           <ul>
             <li>Our driver will contact you 30 minutes before departure</li>
-            <li>Keep your reference number handy for tracking</li>
-            <li>You can track your booking status online</li>
+            <li>Keep your reference number handy for support and updates</li>
           </ul>
-
-          <center>
-            <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/track?ref=${booking.reference_number}" class="button">Track Your Booking</a>
-          </center>
 
           <p>If you have any questions, feel free to contact us at ${SMTP_USER} or call us at +91-9969984328.</p>
         </div>

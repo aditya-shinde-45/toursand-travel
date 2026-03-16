@@ -6,7 +6,6 @@ const adminController = require('../controllers/adminController');
 const { authenticateAdmin } = require('../middleware/auth');
 const {
   authRateLimit,
-  bookingTrackRateLimit,
   contactRateLimit,
 } = require('../middleware/rateLimit');
 
@@ -33,7 +32,6 @@ router.use(healthRoutes);
 // PUBLIC ROUTES - Booking
 // ============================================
 router.post('/bookings', bookingController.createBooking);
-router.get('/bookings/track/:reference', bookingTrackRateLimit, bookingController.trackBooking);
 router.post('/bookings/check-availability', bookingController.checkAvailability);
 
 // ============================================

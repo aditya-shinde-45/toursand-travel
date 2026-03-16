@@ -92,13 +92,7 @@ npm run dev
 6. You'll receive a reference number (format: `ATT-XXXXXX`)
 7. Check email for confirmation (if SMTP is working)
 
-### 3. Test Booking Tracking
-
-1. Go to **Track Booking** page
-2. Enter reference number from step 2
-3. View booking status and details
-
-### 4. Test Admin Dashboard
+### 3. Test Admin Dashboard
 
 **URL:** `http://localhost:5173/admin/login`
 
@@ -142,7 +136,6 @@ curl -X POST http://localhost:5000/api/admin/login \
 
 ### ✅ Public Features
 - **Booking Creation** → `/api/bookings` (POST)
-- **Booking Tracking** → `/api/bookings/track/:reference` (GET)
 - **Vehicle Availability Check** → `/api/bookings/check-availability` (POST)
 - **Popular Routes** → `/api/content/popular-routes` (GET)
 - **Testimonials** → `/api/content/testimonials` (GET)

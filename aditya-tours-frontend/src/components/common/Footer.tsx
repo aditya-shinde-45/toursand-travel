@@ -37,7 +37,6 @@ function Footer() {
           <div className="mt-2 grid gap-1 text-sm text-slate-600">
             <Link to="/">{content.linkHomeLabel}</Link>
             <Link to="/book">{content.linkBookLabel}</Link>
-            <Link to="/track">{content.linkTrackLabel}</Link>
             <Link to="/privacy-policy">{content.linkPrivacyLabel}</Link>
             <Link to="/terms-of-service">{content.linkTermsLabel}</Link>
           </div>

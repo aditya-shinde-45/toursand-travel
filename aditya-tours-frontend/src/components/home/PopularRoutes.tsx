@@ -3,7 +3,6 @@ import type { PopularRoute } from '../../types/content';
 import { formatCurrency, formatDuration } from '../../utils/formatting';
 import { MapPin, Clock, Zap } from 'lucide-react';
 import type { PopularRoutesSectionContent } from '../../types/content';
-import { DEFAULT_POPULAR_ROUTES_SECTION_CONTENT } from '../../services/contentSettingsService';
 import { getContentSection } from '../../services/contentService';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,9 +11,7 @@ interface PopularRoutesProps {
 }
 
 function PopularRoutes({ routes }: PopularRoutesProps) {
-  const [sectionContent, setSectionContent] = useState<PopularRoutesSectionContent>(
-    DEFAULT_POPULAR_ROUTES_SECTION_CONTENT,
-  );
+  const [sectionContent, setSectionContent] = useState<PopularRoutesSectionContent | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,10 +41,12 @@ function PopularRoutes({ routes }: PopularRoutesProps) {
 
   return (
     <section className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-[#1B3A5F]">{sectionContent.title}</h2>
-        <p className="mt-2 text-slate-600">{sectionContent.subtitle}</p>
-      </div>
+      {sectionContent ? (
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-[#1B3A5F]">{sectionContent.title}</h2>
+          <p className="mt-2 text-slate-600">{sectionContent.subtitle}</p>
+        </div>
+      ) : null}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {routes.map((route) => (

@@ -56,11 +56,3 @@ export interface AvailabilityResult {
   reason?: string;
   suggestedDates?: string[];
 }
-
-export interface BookingTrackResult {
-  referenceNumber: string;
-  status: BookingStatus;
-  tripSummary: string;
-  customerName: string;
-  supportPhone: string;
-}

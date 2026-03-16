@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import HomePage from './pages/HomePage.tsx';
 import BookingPage from './pages/BookingPage.tsx';
-import TrackBookingPage from './pages/TrackBookingPage.tsx';
 import ContactPage from './pages/ContactPage.tsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
@@ -58,8 +57,8 @@ function App() {
           <Router>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/booking" element={<Navigate to="/book" replace />} />
               <Route path="/book" element={<BookingPage />} />
-              <Route path="/track" element={<TrackBookingPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />

@@ -51,19 +51,6 @@ async function createBooking(bookingData) {
 }
 
 /**
- * Find booking by reference number and email
- */
-async function findBookingByReference(referenceNumber, email) {
-  const query = `
-    SELECT * FROM bookings
-    WHERE reference_number = $1 AND customer_email = $2
-  `;
-  
-  const result = await pool.query(query, [referenceNumber, email]);
-  return result.rows[0];
-}
-
-/**
  * Find booking by ID
  */
 async function findBookingById(id) {
@@ -304,7 +291,6 @@ async function getDashboardStats(startDate, endDate) {
 
 module.exports = {
   createBooking,
-  findBookingByReference,
   findBookingById,
   getBookings,
   getBookingsCount,

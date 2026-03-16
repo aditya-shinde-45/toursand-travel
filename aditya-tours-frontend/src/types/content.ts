@@ -65,7 +65,6 @@ export interface FooterSectionContent {
   quickLinksTitle: string;
   linkHomeLabel: string;
   linkBookLabel: string;
-  linkTrackLabel: string;
   linkPrivacyLabel: string;
   linkTermsLabel: string;
   contactTitle: string;

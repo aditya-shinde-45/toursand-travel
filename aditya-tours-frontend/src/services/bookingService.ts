@@ -1,4 +1,3 @@
-import type { BookingTrackResult } from '../types/booking';
 import type { PricingResult } from '../types/pricing';
 import { apiRequest } from './api';
 
@@ -47,12 +46,6 @@ export async function createBooking(payload: BookingPayload) {
     body: JSON.stringify(payload),
   });
   return { referenceNumber: response.reference_number };
-}
-
-export async function trackBooking(referenceNumber: string, _email: string) {
-  return apiRequest<BookingTrackResult>(
-    `/bookings/track/${encodeURIComponent(referenceNumber)}`,
-  );
 }
 
 export async function getPricingEstimate(distanceKm: number, durationHours: number) {

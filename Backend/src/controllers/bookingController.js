@@ -73,44 +73,6 @@ async function createBooking(req, res) {
 }
 
 /**
- * Track booking by reference number
- * GET /api/bookings/track/:reference
- */
-async function trackBooking(req, res) {
-  try {
-    const { reference } = req.params;
-
-    if (!reference) {
-      return res.status(400).json({
-        success: false,
-        error: 'Reference number is required'
-      });
-    }
-
-    const booking = await bookingRepository.findBookingByReference(reference);
-
-    if (!booking) {
-      return res.status(404).json({
-        success: false,
-        error: 'Booking not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      data: booking
-    });
-
-  } catch (error) {
-    console.error('Error tracking booking:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to track booking'
-    });
-  }
-}
-
-/**
  * Check vehicle availability
  * POST /api/bookings/check-availability
  */
@@ -146,6 +108,5 @@ async function checkAvailability(req, res) {
 
 module.exports = {
   createBooking,
-  trackBooking,
   checkAvailability
 };

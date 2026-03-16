@@ -85,7 +85,7 @@ function HowItWorks() {
       {/* CTA Button */}
       <div className="text-center">
         <a
-          href="/booking"
+          href="/book"
           className="inline-flex items-center gap-2 rounded-lg bg-[#FF9933] px-8 py-3 font-semibold text-white transition-all hover:bg-[#e68929] hover:shadow-lg"
         >
           Start Booking Now
