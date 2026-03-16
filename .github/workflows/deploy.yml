@@ -68,6 +68,35 @@ jobs:
           name: backend-lambda-zip
           path: Backend/.artifacts
 
+      - name: Validate AWS secret format
+        env:
+          AWS_ACCESS_KEY_ID_RAW: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY_RAW: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          access_key_trimmed="$(printf '%s' "$AWS_ACCESS_KEY_ID_RAW" | tr -d '\r\n[:space:]')"
+          secret_key_trimmed="$(printf '%s' "$AWS_SECRET_ACCESS_KEY_RAW" | tr -d '\r\n[:space:]')"
+
+          if [ "$access_key_trimmed" != "$AWS_ACCESS_KEY_ID_RAW" ]; then
+            echo "AWS_ACCESS_KEY_ID contains whitespace or newlines in GitHub secret." >&2
+            exit 1
+          fi
+
+          if [ "$secret_key_trimmed" != "$AWS_SECRET_ACCESS_KEY_RAW" ]; then
+            echo "AWS_SECRET_ACCESS_KEY contains whitespace or newlines in GitHub secret." >&2
+            exit 1
+          fi
+
+          if ! printf '%s' "$AWS_ACCESS_KEY_ID_RAW" | grep -Eq '^AKIA[0-9A-Z]{16}$'; then
+            echo "AWS_ACCESS_KEY_ID format is invalid." >&2
+            exit 1
+          fi
+
+          secret_len=${#AWS_SECRET_ACCESS_KEY_RAW}
+          if [ "$secret_len" -lt 40 ]; then
+            echo "AWS_SECRET_ACCESS_KEY appears too short." >&2
+            exit 1
+          fi
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
